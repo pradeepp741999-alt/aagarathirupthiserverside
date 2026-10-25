@@ -1,0 +1,602 @@
+{
+  "info": {
+    "name": "Aagara Thirupthi Backend API",
+    "_postman_id": "aagara-thirupthi-api-collection",
+    "description": "Comprehensive Postman API collection for Aagara Thirupthi Hyper-local Marketplace serving React Native User and Provider client apps.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "providerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Send OTP (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"9876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/send-otp", "host": ["{{baseUrl}}"], "path": ["auth", "send-otp"] }
+          }
+        },
+        {
+          "name": "Verify OTP (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["auth", "verify-otp"] }
+          }
+        },
+        {
+          "name": "Send OTP (Provider)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"9876500001\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/send-otp", "host": ["{{baseUrl}}"], "path": ["auth", "send-otp"] }
+          }
+        },
+        {
+          "name": "Verify OTP (Provider)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobile\": \"9876500001\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/verify-otp", "host": ["{{baseUrl}}"], "path": ["auth", "verify-otp"] }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"<refreshToken>\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/refresh-token", "host": ["{{baseUrl}}"], "path": ["auth", "refresh-token"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Master Data",
+      "item": [
+        {
+          "name": "Get Onboarding Slides (User)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/app/onboarding", "host": ["{{baseUrl}}"], "path": ["app", "onboarding"] }
+          }
+        },
+        {
+          "name": "Get Categories (User)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Get Categories (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "provider" }],
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Get Category Details",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/categories/details", "host": ["{{baseUrl}}"], "path": ["categories", "details"] }
+          }
+        },
+        {
+          "name": "Get Districts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/districts", "host": ["{{baseUrl}}"], "path": ["districts"] }
+          }
+        },
+        {
+          "name": "Get Event Types",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": {
+              "raw": "{{baseUrl}}/config/event-types?category=catering",
+              "host": ["{{baseUrl}}"],
+              "path": ["config", "event-types"],
+              "query": [{ "key": "category", "value": "catering" }]
+            }
+          }
+        },
+        {
+          "name": "Get Filters Metadata",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/providers/filters-meta", "host": ["{{baseUrl}}"], "path": ["providers", "filters-meta"] }
+          }
+        },
+        {
+          "name": "Get FAQs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/support/faqs", "host": ["{{baseUrl}}"], "path": ["support", "faqs"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile & Requirements",
+      "item": [
+        {
+          "name": "Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kavitha Rajan\",\n  \"district\": \"Salem\",\n  \"location\": \"Fairlands\",\n  \"whatsapp\": \"9876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/user/profile", "host": ["{{baseUrl}}"], "path": ["user", "profile"] }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/user/profile", "host": ["{{baseUrl}}"], "path": ["user", "profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kavitha Rajan\",\n  \"district\": \"Salem\",\n  \"location\": \"Fairlands\",\n  \"whatsapp\": \"9876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/user/profile", "host": ["{{baseUrl}}"], "path": ["user", "profile"] }
+          }
+        },
+        {
+          "name": "Patch Location",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"district\": \"Salem\",\n  \"location\": \"Fairlands\",\n  \"lat\": 11.6782,\n  \"lng\": 78.1432\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/user/location", "host": ["{{baseUrl}}"], "path": ["user", "location"] }
+          }
+        },
+        {
+          "name": "Save Requirement Draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"catering\",\n  \"eventType\": \"Wedding\",\n  \"eventDate\": \"2026-11-20\",\n  \"guestCount\": 300,\n  \"location\": \"Fairlands\",\n  \"district\": \"Salem\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/requirements/draft", "host": ["{{baseUrl}}"], "path": ["requirements", "draft"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Providers Public Directory",
+      "item": [
+        {
+          "name": "Get Nearby Providers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": {
+              "raw": "{{baseUrl}}/providers/nearby?district=Salem&lat=11.6643&lng=78.1460",
+              "host": ["{{baseUrl}}"],
+              "path": ["providers", "nearby"],
+              "query": [
+                { "key": "district", "value": "Salem" },
+                { "key": "lat", "value": "11.6643" },
+                { "key": "lng", "value": "78.1460" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Match Providers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"catering\",\n  \"eventType\": \"Wedding\",\n  \"eventDate\": \"2026-11-20\",\n  \"guestCount\": 300,\n  \"district\": \"Salem\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/providers/match", "host": ["{{baseUrl}}"], "path": ["providers", "match"] }
+          }
+        },
+        {
+          "name": "List Providers Directory",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": {
+              "raw": "{{baseUrl}}/providers?category=catering&district=Salem",
+              "host": ["{{baseUrl}}"],
+              "path": ["providers"],
+              "query": [
+                { "key": "category", "value": "catering" },
+                { "key": "district", "value": "Salem" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Provider Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/providers/:providerId", "host": ["{{baseUrl}}"], "path": ["providers", ":providerId"] }
+          }
+        },
+        {
+          "name": "Get Provider Calendar",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": {
+              "raw": "{{baseUrl}}/providers/:providerId/calendar?year=2026&month=11",
+              "host": ["{{baseUrl}}"],
+              "path": ["providers", ":providerId", "calendar"],
+              "query": [
+                { "key": "year", "value": "2026" },
+                { "key": "month", "value": "11" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Provider Availability",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": {
+              "raw": "{{baseUrl}}/providers/:providerId/availability?startDate=2026-11-20&endDate=2026-11-20",
+              "host": ["{{baseUrl}}"],
+              "path": ["providers", ":providerId", "availability"],
+              "query": [
+                { "key": "startDate", "value": "2026-11-20" },
+                { "key": "endDate", "value": "2026-11-20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Provider Menu",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/providers/:providerId/menu", "host": ["{{baseUrl}}"], "path": ["providers", ":providerId", "menu"] }
+          }
+        },
+        {
+          "name": "Get Provider Packages",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/providers/:providerId/packages", "host": ["{{baseUrl}}"], "path": ["providers", ":providerId", "packages"] }
+          }
+        },
+        {
+          "name": "Get Special Combos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-App-Role", "value": "user" }],
+            "url": { "raw": "{{baseUrl}}/combos/special", "host": ["{{baseUrl}}"], "path": ["combos", "special"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enquiries & Bookings",
+      "item": [
+        {
+          "name": "Create Enquiry (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"<providerId>\",\n  \"category\": \"catering\",\n  \"eventType\": \"Wedding\",\n  \"eventDate\": \"2026-11-20\",\n  \"location\": \"Fairlands\",\n  \"district\": \"Salem\",\n  \"guestCount\": 250,\n  \"items\": [\n    { \"name\": \"Royal South Indian Feast\", \"price\": 450, \"qty\": 250 }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/enquiries", "host": ["{{baseUrl}}"], "path": ["enquiries"] }
+          }
+        },
+        {
+          "name": "List Enquiries (User)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/enquiries", "host": ["{{baseUrl}}"], "path": ["enquiries"] }
+          }
+        },
+        {
+          "name": "Enquiry Summary (User)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "user" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/enquiries/summary", "host": ["{{baseUrl}}"], "path": ["enquiries", "summary"] }
+          }
+        },
+        {
+          "name": "Enquiry Counts (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/enquiries/counts", "host": ["{{baseUrl}}"], "path": ["enquiries", "counts"] }
+          }
+        },
+        {
+          "name": "List Enquiries (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/enquiries?status=pending", "host": ["{{baseUrl}}"], "path": ["enquiries"], "query": [{ "key": "status", "value": "pending" }] }
+          }
+        },
+        {
+          "name": "Send Quote (Provider)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quote_amount\": 112500,\n  \"valid_until\": \"2026-11-15\",\n  \"inclusions\": [\"Full buffet service\", \"Live dosa counter\", \"Banana leaf service\"],\n  \"terms\": \"30% advance on confirmation\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/enquiries/:id/quote", "host": ["{{baseUrl}}"], "path": ["enquiries", ":id", "quote"] }
+          }
+        },
+        {
+          "name": "Confirm Enquiry into Booking (Provider)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/enquiries/:id/status", "host": ["{{baseUrl}}"], "path": ["enquiries", ":id", "status"] }
+          }
+        },
+        {
+          "name": "List Bookings (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/bookings?status=upcoming", "host": ["{{baseUrl}}"], "path": ["bookings"], "query": [{ "key": "status", "value": "upcoming" }] }
+          }
+        },
+        {
+          "name": "Record Payment (Provider)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 33750,\n  \"payment_method\": \"upi\",\n  \"reference_id\": \"UPI-9821892182\",\n  \"notes\": \"Advance payment\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/bookings/:id/payments", "host": ["{{baseUrl}}"], "path": ["bookings", ":id", "payments"] }
+          }
+        },
+        {
+          "name": "Download Invoice PDF (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/bookings/:id/invoice", "host": ["{{baseUrl}}"], "path": ["bookings", ":id", "invoice"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRM, Analytics & Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Metrics (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/dashboard/metrics", "host": ["{{baseUrl}}"], "path": ["dashboard", "metrics"] }
+          }
+        },
+        {
+          "name": "List CRM Customers (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/crm/customers", "host": ["{{baseUrl}}"], "path": ["crm", "customers"] }
+          }
+        },
+        {
+          "name": "CRM Stats (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/crm/stats", "host": ["{{baseUrl}}"], "path": ["crm", "stats"] }
+          }
+        },
+        {
+          "name": "Analytics Overview (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/analytics/overview", "host": ["{{baseUrl}}"], "path": ["analytics", "overview"] }
+          }
+        },
+        {
+          "name": "Earnings Summary (Provider)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "X-App-Role", "value": "provider" },
+              { "key": "Authorization", "value": "Bearer {{providerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/providers/earnings/summary", "host": ["{{baseUrl}}"], "path": ["providers", "earnings", "summary"] }
+          }
+        }
+      ]
+    }
+  ]
+}
