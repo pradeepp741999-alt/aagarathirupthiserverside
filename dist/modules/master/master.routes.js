@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.masterRoutes = void 0;
+const express_1 = require("express");
+const master_controller_1 = require("./master.controller");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.get('/app/onboarding', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getOnboardingSlides));
+router.get('/categories/details', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getCategoryDetails));
+router.get('/categories', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getCategories));
+router.get('/districts', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getDistricts));
+router.get('/config/event-types', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getEventTypes));
+router.get('/support/faqs', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getFaqs));
+router.get('/providers/filters-meta', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getFiltersMeta));
+exports.masterRoutes = router;

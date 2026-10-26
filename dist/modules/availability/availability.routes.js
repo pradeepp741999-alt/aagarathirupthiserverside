@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.availabilityRoutes = void 0;
+const express_1 = require("express");
+const availability_controller_1 = require("./availability.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+router.get('/availability/month', (0, asyncHandler_1.asyncHandler)(availability_controller_1.availabilityController.getMonth));
+router.put('/availability/date', (0, asyncHandler_1.asyncHandler)(availability_controller_1.availabilityController.updateDate));
+router.post('/availability/bulk', (0, asyncHandler_1.asyncHandler)(availability_controller_1.availabilityController.bulkUpdate));
+exports.availabilityRoutes = router;

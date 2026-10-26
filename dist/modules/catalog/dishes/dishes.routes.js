@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dishesRoutes = void 0;
+const express_1 = require("express");
+const dishes_controller_1 = require("./dishes.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+router.get('/dishes', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.getDishes));
+router.post('/dishes', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.createDish));
+router.get('/dishes/:id', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.getDishById));
+router.put('/dishes/:id', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.updateDish));
+router.patch('/dishes/:id/status', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.patchDishStatus));
+router.delete('/dishes/:id', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.deleteDish));
+exports.dishesRoutes = router;

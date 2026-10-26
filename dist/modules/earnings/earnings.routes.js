@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.earningsRoutes = void 0;
+const express_1 = require("express");
+const earnings_controller_1 = require("./earnings.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+router.get('/earnings/summary', (0, asyncHandler_1.asyncHandler)(earnings_controller_1.earningsController.getSummary));
+router.get('/earnings/transactions', (0, asyncHandler_1.asyncHandler)(earnings_controller_1.earningsController.getTransactions));
+exports.earningsRoutes = router;

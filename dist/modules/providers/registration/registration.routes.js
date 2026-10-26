@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registrationRoutes = void 0;
+const express_1 = require("express");
+const registration_controller_1 = require("./registration.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'));
+router.get('/registration/draft', (0, asyncHandler_1.asyncHandler)(registration_controller_1.registrationController.getDraft));
+router.put('/registration/step/:n', (0, asyncHandler_1.asyncHandler)(registration_controller_1.registrationController.saveStep));
+router.get('/registration/summary', (0, asyncHandler_1.asyncHandler)(registration_controller_1.registrationController.getSummary));
+router.post('/registration/submit', (0, asyncHandler_1.asyncHandler)(registration_controller_1.registrationController.submit));
+exports.registrationRoutes = router;

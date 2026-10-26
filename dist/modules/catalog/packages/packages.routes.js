@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.packagesRoutes = void 0;
+const express_1 = require("express");
+const packages_controller_1 = require("./packages.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+router.get('/packages', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.getPackages));
+router.post('/packages', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.createPackage));
+router.get('/packages/:id', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.getPackageById));
+router.put('/packages/:id', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.updatePackage));
+router.patch('/packages/:id/status', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.patchPackageStatus));
+router.delete('/packages/:id', (0, asyncHandler_1.asyncHandler)(packages_controller_1.packagesController.deletePackage));
+exports.packagesRoutes = router;

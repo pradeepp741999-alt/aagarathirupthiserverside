@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.requirementsRoutes = void 0;
+const express_1 = require("express");
+const requirements_controller_1 = require("./requirements.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.post('/requirements/draft', authenticate_1.authenticate, (0, requireRole_1.requireRole)('user'), (0, asyncHandler_1.asyncHandler)(requirements_controller_1.requirementsController.saveDraft));
+exports.requirementsRoutes = router;

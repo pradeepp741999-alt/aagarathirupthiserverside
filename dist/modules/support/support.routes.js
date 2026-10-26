@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.supportRoutes = void 0;
+const express_1 = require("express");
+const support_controller_1 = require("./support.controller");
+const optionalAuth_1 = require("@/common/middleware/optionalAuth");
+const master_controller_1 = require("@/modules/master/master.controller");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.get('/faqs', (0, asyncHandler_1.asyncHandler)(master_controller_1.masterController.getFaqs));
+router.post('/enquiry', optionalAuth_1.optionalAuth, (0, asyncHandler_1.asyncHandler)(support_controller_1.supportController.createSupportEnquiry));
+router.post('/tickets', optionalAuth_1.optionalAuth, (0, asyncHandler_1.asyncHandler)(support_controller_1.supportController.createTicket));
+exports.supportRoutes = router;

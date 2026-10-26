@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.combosPublicRoutes = exports.combosRoutes = void 0;
+const express_1 = require("express");
+const combos_controller_1 = require("./combos.controller");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const providerRouter = (0, express_1.Router)();
+providerRouter.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+providerRouter.get('/combos', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.getProviderCombos));
+providerRouter.post('/combos', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.createCombo));
+providerRouter.get('/combos/:id', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.getComboById));
+providerRouter.put('/combos/:id', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.updateCombo));
+providerRouter.patch('/combos/:id/status', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.patchComboStatus));
+providerRouter.delete('/combos/:id', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.deleteCombo));
+// Public & user alias router
+const publicRouter = (0, express_1.Router)();
+publicRouter.get('/combos/special', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.getPublicSpecialCombos));
+publicRouter.post('/combos/special', authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider, (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.createCombo));
+exports.combosRoutes = providerRouter;
+exports.combosPublicRoutes = publicRouter;

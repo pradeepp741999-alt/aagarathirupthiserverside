@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.usersRoutes = void 0;
+const express_1 = require("express");
+const users_controller_1 = require("./users.controller");
+const users_validation_1 = require("./users.validation");
+const authenticate_1 = require("@/common/middleware/authenticate");
+const requireRole_1 = require("@/common/middleware/requireRole");
+const validate_1 = require("@/common/middleware/validate");
+const asyncHandler_1 = require("@/common/utils/asyncHandler");
+const router = (0, express_1.Router)();
+router.post('/user/profile', authenticate_1.authenticate, (0, requireRole_1.requireRole)('user'), (0, validate_1.validate)({ body: users_validation_1.userProfileCreateSchema }), (0, asyncHandler_1.asyncHandler)(users_controller_1.usersController.createProfile));
+router.get('/user/profile', authenticate_1.authenticate, (0, requireRole_1.requireRole)('user'), (0, asyncHandler_1.asyncHandler)(users_controller_1.usersController.getProfile));
+router.put('/user/profile', authenticate_1.authenticate, (0, requireRole_1.requireRole)('user'), (0, validate_1.validate)({ body: users_validation_1.userProfileUpdateSchema }), (0, asyncHandler_1.asyncHandler)(users_controller_1.usersController.updateProfile));
+router.patch('/user/location', authenticate_1.authenticate, (0, requireRole_1.requireRole)('user'), (0, validate_1.validate)({ body: users_validation_1.userLocationPatchSchema }), (0, asyncHandler_1.asyncHandler)(users_controller_1.usersController.patchLocation));
+exports.usersRoutes = router;
