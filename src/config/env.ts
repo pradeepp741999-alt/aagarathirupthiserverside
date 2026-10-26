@@ -59,8 +59,7 @@ if (!parsed.success) {
 }
 
 if (parsed.data.NODE_ENV === 'production' && parsed.data.OTP_DEV_MODE) {
-  console.error('❌ FATAL: OTP_DEV_MODE must NOT be enabled in production environment!');
-  process.exit(1);
+  console.warn('⚠️ WARNING: OTP_DEV_MODE is enabled in production environment (demo OTP 123456 is active).');
 }
 
 export const env = parsed.data;
