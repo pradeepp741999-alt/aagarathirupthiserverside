@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "Aagara Thirupthi Backend - Hyper-local Event Services Marketplace",
   "main": "dist/server.js",
+  "_moduleAliases": {
+    "@": "dist"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/server.js",
+    "start": "node -r module-alias/register dist/server.js",
     "lint": "eslint src/ --ext .ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -27,6 +30,7 @@
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.3.4",
     "mongoose": "^8.24.7",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^4.6.0",
@@ -40,6 +44,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/module-alias": "^2.0.4",
     "@types/multer": "^1.4.12",
     "@types/node": "^20.17.0",
     "@types/node-cron": "^3.0.11",
