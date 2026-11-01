@@ -16,7 +16,7 @@ userRouter.post(
 
 // Provider review router (mounted under /api/v1/providers)
 const providerRouter = Router();
-providerRouter.use(authenticate, requireRole('provider'), requireApprovedProvider);
+providerRouter.use('/reviews', authenticate, requireRole('provider'), requireApprovedProvider);
 providerRouter.get('/reviews/summary', asyncHandler(reviewsController.getProviderReviewsSummary));
 providerRouter.get('/reviews', asyncHandler(reviewsController.getProviderReviews));
 providerRouter.post('/reviews/:id/reply', asyncHandler(reviewsController.replyToReview));

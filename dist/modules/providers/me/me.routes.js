@@ -8,7 +8,7 @@ const requireRole_1 = require("@/common/middleware/requireRole");
 const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
 const asyncHandler_1 = require("@/common/utils/asyncHandler");
 const router = (0, express_1.Router)();
-router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'));
+router.use(['/me', '/settings'], authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'));
 // Available in draft / pending / rejected
 router.get('/me/status', (0, asyncHandler_1.asyncHandler)(me_controller_1.meController.getStatus));
 router.get('/me', (0, asyncHandler_1.asyncHandler)(me_controller_1.meController.getMe));

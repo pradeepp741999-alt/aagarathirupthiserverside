@@ -12,13 +12,14 @@ const User_1 = require("@/models/User");
 const Provider_1 = require("@/models/Provider");
 const Session_1 = require("@/models/Session");
 const sms_1 = require("@/services/sms");
+const mail_1 = require("@/services/mail");
 const token_service_1 = require("@/services/token.service");
 const respond_1 = require("@/common/http/respond");
 const AppError_1 = require("@/common/errors/AppError");
 const errorCodes_1 = require("@/common/errors/errorCodes");
 exports.authController = {
     async sendOtp(req, res) {
-        const { mobile } = req.body;
+        const { mobile, email } = req.body;
         const role = req.appRole;
         // Check recent sessions in rate limit window
         const windowStart = new Date(Date.now() - env_1.env.OTP_WINDOW_MINUTES * 60 * 1000);
@@ -58,6 +59,11 @@ exports.authController = {
             otp,
             message: `Your Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes. Do not share it.`,
         });
+        // Send OTP via Email if target email configured, or provided in body, or exists in provider account
+        const targetEmail = email || env_1.env.OTP_TARGET_EMAIL;
+        if (targetEmail) {
+            mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => { });
+        }
         if (role === 'provider') {
             return respond_1.respond.ok(req, res, {
                 mobile,
@@ -163,7 +169,7 @@ exports.authController = {
         });
     },
     async resendOtp(req, res) {
-        const { mobile } = req.body;
+        const { mobile, email } = req.body;
         const role = req.appRole;
         const latest = await OtpSession_1.OtpSession.findOne({ mobile, role }).sort({ createdAt: -1 });
         if (latest) {
@@ -193,6 +199,10 @@ exports.authController = {
             otp,
             message: `Your new Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes.`,
         });
+        const targetEmail = email || env_1.env.OTP_TARGET_EMAIL;
+        if (targetEmail) {
+            mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => { });
+        }
         if (role === 'provider') {
             return respond_1.respond.ok(req, res, {
                 resend_available_in_seconds: env_1.env.OTP_RESEND_COOLDOWN_SECONDS,

@@ -8,7 +8,7 @@ const requireRole_1 = require("@/common/middleware/requireRole");
 const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
 const asyncHandler_1 = require("@/common/utils/asyncHandler");
 const router = (0, express_1.Router)();
-router.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+router.use('/dishes', authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
 router.get('/dishes', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.getDishes));
 router.post('/dishes', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.createDish));
 router.get('/dishes/:id', (0, asyncHandler_1.asyncHandler)(dishes_controller_1.dishesController.getDishById));

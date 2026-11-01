@@ -38,7 +38,7 @@ exports.matchingService = {
         }
         // 2. Query suitable approved, online providers
         const query = {
-            status: 'approved',
+            status: { $in: ['approved', 'published', 'pending'] },
             isActive: true,
             isOnline: true,
             $or: [{ category: req.category }, { secondaryCategories: req.category }],

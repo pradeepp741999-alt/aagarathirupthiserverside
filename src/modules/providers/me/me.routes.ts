@@ -7,7 +7,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'));
+router.use(['/me', '/settings'], authenticate, requireRole('provider'));
 
 // Available in draft / pending / rejected
 router.get('/me/status', asyncHandler(meController.getStatus));

@@ -7,7 +7,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'), requireApprovedProvider);
+router.use('/packages', authenticate, requireRole('provider'), requireApprovedProvider);
 
 router.get('/packages', asyncHandler(packagesController.getPackages));
 router.post('/packages', asyncHandler(packagesController.createPackage));

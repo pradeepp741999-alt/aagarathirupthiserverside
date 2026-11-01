@@ -7,7 +7,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'), requireApprovedProvider);
+router.use('/availability', authenticate, requireRole('provider'), requireApprovedProvider);
 
 router.get('/availability/month', asyncHandler(availabilityController.getMonth));
 router.put('/availability/date', asyncHandler(availabilityController.updateDate));

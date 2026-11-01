@@ -6,7 +6,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'));
+router.use('/registration', authenticate, requireRole('provider'));
 
 router.get('/registration/draft', asyncHandler(registrationController.getDraft));
 router.put('/registration/step/:n', asyncHandler(registrationController.saveStep));

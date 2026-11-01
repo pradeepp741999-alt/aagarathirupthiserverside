@@ -7,7 +7,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'), requireApprovedProvider);
+router.use('/dishes', authenticate, requireRole('provider'), requireApprovedProvider);
 
 router.get('/dishes', asyncHandler(dishesController.getDishes));
 router.post('/dishes', asyncHandler(dishesController.createDish));

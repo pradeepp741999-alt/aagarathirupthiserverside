@@ -2,14 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pushTokenSchema = exports.refreshTokenSchema = exports.resendOtpSchema = exports.verifyOtpSchema = exports.sendOtpSchema = void 0;
 const zod_1 = require("zod");
-exports.sendOtpSchema = zod_1.z.object({
+exports.sendOtpSchema = zod_1.z
+    .object({
     mobile: zod_1.z
         .string()
         .transform((val) => val.replace(/\D/g, '').slice(-10))
         .refine((val) => /^[6-9]\d{9}$/.test(val), {
         message: 'Mobile must be a valid 10-digit Indian phone number starting with 6-9',
     }),
-});
+    email: zod_1.z.string().email('Invalid email address').optional(),
+})
+    .passthrough();
 exports.verifyOtpSchema = zod_1.z
     .object({
     mobile: zod_1.z
@@ -20,6 +23,7 @@ exports.verifyOtpSchema = zod_1.z
     }),
     otp: zod_1.z.string().trim().length(6, 'OTP must be 6 digits'),
     txnId: zod_1.z.string().optional(),
+    email: zod_1.z.string().email('Invalid email address').optional(),
 })
     .passthrough();
 exports.resendOtpSchema = exports.sendOtpSchema;

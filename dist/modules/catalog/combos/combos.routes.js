@@ -8,7 +8,7 @@ const requireRole_1 = require("@/common/middleware/requireRole");
 const requireApprovedProvider_1 = require("@/common/middleware/requireApprovedProvider");
 const asyncHandler_1 = require("@/common/utils/asyncHandler");
 const providerRouter = (0, express_1.Router)();
-providerRouter.use(authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
+providerRouter.use('/combos', authenticate_1.authenticate, (0, requireRole_1.requireRole)('provider'), requireApprovedProvider_1.requireApprovedProvider);
 providerRouter.get('/combos', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.getProviderCombos));
 providerRouter.post('/combos', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.createCombo));
 providerRouter.get('/combos/:id', (0, asyncHandler_1.asyncHandler)(combos_controller_1.combosController.getComboById));

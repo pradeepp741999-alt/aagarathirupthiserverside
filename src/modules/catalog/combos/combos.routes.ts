@@ -6,7 +6,7 @@ import { requireApprovedProvider } from '@/common/middleware/requireApprovedProv
 import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const providerRouter = Router();
-providerRouter.use(authenticate, requireRole('provider'), requireApprovedProvider);
+providerRouter.use('/combos', authenticate, requireRole('provider'), requireApprovedProvider);
 
 providerRouter.get('/combos', asyncHandler(combosController.getProviderCombos));
 providerRouter.post('/combos', asyncHandler(combosController.createCombo));

@@ -59,7 +59,7 @@ export const publicProvidersController = {
     const { page, limit, skip } = parsePagination(req.query);
 
     const mongoQuery: Record<string, unknown> = {
-      status: 'approved',
+      status: { $in: ['approved', 'published', 'pending'] },
       isActive: true,
     };
 
@@ -157,7 +157,7 @@ export const publicProvidersController = {
     }
 
     const query: Record<string, unknown> = {
-      status: 'approved',
+      status: { $in: ['approved', 'published', 'pending'] },
       isActive: true,
       isOnline: true,
     };
@@ -213,7 +213,7 @@ export const publicProvidersController = {
 
     const provider = await Provider.findOne({
       _id: id,
-      status: 'approved',
+      status: { $in: ['approved', 'published', 'pending'] },
       isActive: true,
     }).lean();
 

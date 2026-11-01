@@ -57,7 +57,7 @@ exports.publicProvidersController = {
         const { category, district, query, sort, minRating, veg, minPrice, maxPrice } = req.query;
         const { page, limit, skip } = (0, pagination_1.parsePagination)(req.query);
         const mongoQuery = {
-            status: 'approved',
+            status: { $in: ['approved', 'published', 'pending'] },
             isActive: true,
         };
         if (category) {
@@ -143,7 +143,7 @@ exports.publicProvidersController = {
             }
         }
         const query = {
-            status: 'approved',
+            status: { $in: ['approved', 'published', 'pending'] },
             isActive: true,
             isOnline: true,
         };
@@ -191,7 +191,7 @@ exports.publicProvidersController = {
         const { startDate, endDate } = req.query;
         const provider = await Provider_1.Provider.findOne({
             _id: id,
-            status: 'approved',
+            status: { $in: ['approved', 'published', 'pending'] },
             isActive: true,
         }).lean();
         if (!provider) {

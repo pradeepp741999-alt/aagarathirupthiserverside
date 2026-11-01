@@ -7,7 +7,7 @@ import { asyncHandler } from '@/common/utils/asyncHandler';
 
 const router = Router();
 
-router.use(authenticate, requireRole('provider'), requireApprovedProvider);
+router.use('/earnings', authenticate, requireRole('provider'), requireApprovedProvider);
 
 router.get('/earnings/summary', asyncHandler(earningsController.getSummary));
 router.get('/earnings/transactions', asyncHandler(earningsController.getTransactions));
