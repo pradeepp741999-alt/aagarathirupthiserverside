@@ -46,6 +46,11 @@ const envSchema = z.object({
   ADMIN_EMAIL: z.string().email().default('admin@aagarathirupthi.com'),
   ADMIN_PASSWORD: z.string().min(8).default('Admin@Aagara2026!'),
 
+  SMTP_USER: z.string().optional().default(''),
+  SMTP_PASS: z.string().optional().default(''),
+  SMTP_FROM: z.string().optional().default(''),
+  OTP_TARGET_EMAIL: z.string().optional().default(''),
+
   PLATFORM_COMMISSION_PERCENT: z.coerce.number().default(0),
   JOBS_ENABLED: z.enum(['true', 'false']).default('true').transform((val) => val === 'true'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),

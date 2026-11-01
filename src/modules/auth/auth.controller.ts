@@ -7,6 +7,7 @@ import { User } from '@/models/User';
 import { Provider } from '@/models/Provider';
 import { Session } from '@/models/Session';
 import { smsService } from '@/services/sms';
+import { mailService } from '@/services/mail';
 import { tokenService } from '@/services/token.service';
 import { respond } from '@/common/http/respond';
 import { AppError } from '@/common/errors/AppError';
@@ -14,7 +15,7 @@ import { ERROR_CODES } from '@/common/errors/errorCodes';
 
 export const authController = {
   async sendOtp(req: Request, res: Response) {
-    const { mobile } = req.body;
+    const { mobile, email } = req.body;
     const role = req.appRole!;
 
     // Check recent sessions in rate limit window
@@ -68,6 +69,12 @@ export const authController = {
       otp,
       message: `Your Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes. Do not share it.`,
     });
+
+    // Send OTP via Email if target email configured, or provided in body, or exists in provider account
+    const targetEmail = email || env.OTP_TARGET_EMAIL;
+    if (targetEmail) {
+      mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => {});
+    }
 
     if (role === 'provider') {
       return respond.ok(
@@ -200,7 +207,7 @@ export const authController = {
   },
 
   async resendOtp(req: Request, res: Response) {
-    const { mobile } = req.body;
+    const { mobile, email } = req.body;
     const role = req.appRole!;
 
     const latest = await OtpSession.findOne({ mobile, role }).sort({ createdAt: -1 });
@@ -234,6 +241,11 @@ export const authController = {
       otp,
       message: `Your new Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes.`,
     });
+
+    const targetEmail = email || env.OTP_TARGET_EMAIL;
+    if (targetEmail) {
+      mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => {});
+    }
 
     if (role === 'provider') {
       return respond.ok(
