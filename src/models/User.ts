@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
   mobile: string;
+  email?: string | null;
   name?: string | null;
   whatsapp?: string | null;
   altMobile?: string | null;
@@ -27,6 +28,7 @@ const userSchema = new Schema<IUser>(
       unique: true,
       match: /^[6-9]\d{9}$/,
     },
+    email: { type: String, lowercase: true, trim: true, default: null },
     name: { type: String, default: null },
     whatsapp: { type: String, default: null },
     altMobile: { type: String, default: null },

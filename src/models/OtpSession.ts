@@ -2,7 +2,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { APP_ROLES, AppRole } from '@/config/constants';
 
 export interface IOtpSession extends Document {
-  mobile: string;
+  mobile?: string;
+  email?: string;
   role: AppRole;
   txnId: string;
   otpHash: string;
@@ -20,8 +21,12 @@ const otpSessionSchema = new Schema<IOtpSession>(
   {
     mobile: {
       type: String,
-      required: true,
       match: /^[6-9]\d{9}$/,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
     },
     role: {
       type: String,
