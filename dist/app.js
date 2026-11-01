@@ -83,6 +83,16 @@ if (env_1.env.NODE_ENV !== 'test') {
 app.use(roleContext_1.roleContext);
 // Dynamic Case Transformation for Provider Role
 app.use(caseTransform_1.caseTransform);
+// Root & Top-level Health Checks
+app.get(['/', '/health', '/helth'], (_req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'Aagara Thirupthi Backend API is running',
+        version: '1.0.0',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+    });
+});
 // Central API Router
 app.use('/api/v1', index_1.default);
 // 404 Catch-all

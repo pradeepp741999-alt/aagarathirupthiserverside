@@ -97,6 +97,17 @@ app.use(roleContext);
 // Dynamic Case Transformation for Provider Role
 app.use(caseTransform);
 
+// Root & Top-level Health Checks
+app.get(['/', '/health', '/helth'], (_req: Request, res: Response) => {
+  res.json({
+    status: 'ok',
+    message: 'Aagara Thirupthi Backend API is running',
+    version: '1.0.0',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Central API Router
 app.use('/api/v1', apiRouter);
 
