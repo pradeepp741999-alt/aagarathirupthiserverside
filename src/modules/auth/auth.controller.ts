@@ -17,14 +17,21 @@ export const authController = {
   async sendOtp(req: Request, res: Response) {
     const { mobile, email } = req.body;
     const role = req.appRole!;
+    const cleanEmail = email ? email.toLowerCase().trim() : undefined;
 
     // Check recent sessions in rate limit window
     const windowStart = new Date(Date.now() - env.OTP_WINDOW_MINUTES * 60 * 1000);
-    const recentSessions = await OtpSession.find({
-      mobile,
+    const sessionQuery: Record<string, any> = {
       role,
       createdAt: { $gte: windowStart },
-    }).sort({ createdAt: -1 });
+    };
+    if (mobile) {
+      sessionQuery.mobile = mobile;
+    } else if (cleanEmail) {
+      sessionQuery.email = cleanEmail;
+    }
+
+    const recentSessions = await OtpSession.find(sessionQuery).sort({ createdAt: -1 });
 
     if (recentSessions.length >= env.OTP_MAX_SENDS) {
       throw new AppError(
@@ -53,7 +60,8 @@ export const authController = {
     const expiresAt = new Date(Date.now() + env.OTP_TTL_SECONDS * 1000);
 
     await OtpSession.create({
-      mobile,
+      ...(mobile ? { mobile } : {}),
+      ...(cleanEmail ? { email: cleanEmail } : {}),
       role,
       txnId,
       otpHash,
@@ -64,14 +72,16 @@ export const authController = {
       expiresAt,
     });
 
-    await smsService.sendSms({
-      toMobile: mobile,
-      otp,
-      message: `Your Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes. Do not share it.`,
-    });
+    if (mobile) {
+      await smsService.sendSms({
+        toMobile: mobile,
+        otp,
+        message: `Your Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes. Do not share it.`,
+      });
+    }
 
     // Send OTP via Email if target email configured, or provided in body, or exists in provider account
-    const targetEmail = email || env.OTP_TARGET_EMAIL;
+    const targetEmail = cleanEmail || env.OTP_TARGET_EMAIL;
     if (targetEmail) {
       mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => {});
     }
@@ -82,11 +92,12 @@ export const authController = {
         res,
         {
           mobile,
+          email: cleanEmail,
           expires_in_seconds: env.OTP_TTL_SECONDS,
           resend_available_in_seconds: env.OTP_RESEND_COOLDOWN_SECONDS,
         },
         {
-          message: `OTP sent successfully to +91 ${mobile}`,
+          message: mobile ? `OTP sent successfully to +91 ${mobile}` : `OTP sent successfully to ${cleanEmail}`,
         }
       );
     }
@@ -94,29 +105,34 @@ export const authController = {
     // User response
     return res.status(200).json({
       success: true,
-      message: 'OTP sent successfully',
+      message: mobile ? 'OTP sent successfully' : `OTP sent successfully to ${cleanEmail}`,
       txnId,
       expiresInSeconds: env.OTP_TTL_SECONDS,
     });
   },
 
   async verifyOtp(req: Request, res: Response) {
-    const { mobile, otp, txnId } = req.body;
+    const { mobile, email, otp, txnId } = req.body;
     const role = req.appRole!;
+    const cleanEmail = email ? email.toLowerCase().trim() : undefined;
 
     const query: Record<string, unknown> = {
-      mobile,
       role,
       consumedAt: { $exists: false },
     };
     if (txnId) {
       query.txnId = txnId;
     }
+    if (mobile) {
+      query.mobile = mobile;
+    } else if (cleanEmail) {
+      query.email = cleanEmail;
+    }
 
     const session = await OtpSession.findOne(query).sort({ createdAt: -1 });
 
     if (!session) {
-      throw new AppError(400, ERROR_CODES.OTP_INVALID, 'No active OTP request found for this mobile number');
+      throw new AppError(400, ERROR_CODES.OTP_INVALID, 'No active OTP request found for this mobile number or email');
     }
 
     if (session.expiresAt < new Date()) {
@@ -143,17 +159,28 @@ export const authController = {
     await session.save();
 
     if (role === 'user') {
-      let user = await User.findOne({ mobile });
+      let user = null;
+      if (mobile) {
+        user = await User.findOne({ mobile });
+      } else if (cleanEmail) {
+        user = await User.findOne({ email: cleanEmail });
+      }
+
       const isNewUser = !user || !user.profileCompleted;
 
       if (!user) {
+        const generatedMobile = mobile || `9${Math.floor(100000000 + Math.random() * 900000000)}`;
         user = await User.create({
-          mobile,
+          mobile: generatedMobile,
+          email: cleanEmail || null,
           profileCompleted: false,
           status: 'active',
           lastLoginAt: new Date(),
         });
       } else {
+        if (cleanEmail && !user.email) {
+          user.email = cleanEmail;
+        }
         user.lastLoginAt = new Date();
         await user.save();
       }
@@ -168,6 +195,7 @@ export const authController = {
           id: user._id.toString(),
           name: user.name || null,
           mobile: user.mobile,
+          email: user.email || cleanEmail || null,
           district: user.district || null,
           location: user.location || null,
         },
@@ -209,8 +237,16 @@ export const authController = {
   async resendOtp(req: Request, res: Response) {
     const { mobile, email } = req.body;
     const role = req.appRole!;
+    const cleanEmail = email ? email.toLowerCase().trim() : undefined;
 
-    const latest = await OtpSession.findOne({ mobile, role }).sort({ createdAt: -1 });
+    const query: Record<string, any> = { role };
+    if (mobile) {
+      query.mobile = mobile;
+    } else if (cleanEmail) {
+      query.email = cleanEmail;
+    }
+
+    const latest = await OtpSession.findOne(query).sort({ createdAt: -1 });
     if (latest) {
       const diffSec = Math.floor((Date.now() - latest.lastSentAt.getTime()) / 1000);
       if (diffSec < env.OTP_RESEND_COOLDOWN_SECONDS) {
@@ -225,7 +261,8 @@ export const authController = {
     const expiresAt = new Date(Date.now() + env.OTP_TTL_SECONDS * 1000);
 
     await OtpSession.create({
-      mobile,
+      ...(mobile ? { mobile } : {}),
+      ...(cleanEmail ? { email: cleanEmail } : {}),
       role,
       txnId,
       otpHash,
@@ -236,13 +273,15 @@ export const authController = {
       expiresAt,
     });
 
-    await smsService.sendSms({
-      toMobile: mobile,
-      otp,
-      message: `Your new Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes.`,
-    });
+    if (mobile) {
+      await smsService.sendSms({
+        toMobile: mobile,
+        otp,
+        message: `Your new Aagara Thirupthi verification code is ${otp}. Valid for 5 minutes.`,
+      });
+    }
 
-    const targetEmail = email || env.OTP_TARGET_EMAIL;
+    const targetEmail = cleanEmail || env.OTP_TARGET_EMAIL;
     if (targetEmail) {
       mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => {});
     }
