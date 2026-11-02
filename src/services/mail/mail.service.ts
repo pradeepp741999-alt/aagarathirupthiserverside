@@ -17,12 +17,15 @@ class MailService {
       return this.transporter;
     }
 
-    if (env.SMTP_USER && env.SMTP_PASS) {
+    const user = env.SMTP_USER || process.env.SMTP_USER;
+    const rawPass = env.SMTP_PASS || process.env.SMTP_PASS;
+
+    if (user && rawPass) {
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: env.SMTP_USER,
-          pass: env.SMTP_PASS.replace(/\s+/g, ''),
+          user,
+          pass: rawPass.replace(/\s+/g, ''),
         },
         tls: {
           rejectUnauthorized: false,
@@ -38,12 +41,14 @@ class MailService {
     const transporter = this.getTransporter();
 
     if (!transporter) {
-      logger.info(
+      logger.warn(
         {
           to: options.to,
           subject: options.subject,
+          smtpUserProvided: Boolean(env.SMTP_USER || process.env.SMTP_USER),
+          smtpPassProvided: Boolean(env.SMTP_PASS || process.env.SMTP_PASS),
         },
-        '[MAIL CONSOLE ADAPTER] No SMTP credentials configured. Email logged to console.'
+        '[MAIL ADAPTER WARNING] SMTP credentials not detected in environment. Email logged to console instead of sending.'
       );
       return true;
     }

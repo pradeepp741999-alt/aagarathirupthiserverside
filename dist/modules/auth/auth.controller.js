@@ -72,7 +72,12 @@ exports.authController = {
         // Send OTP via Email if target email configured, or provided in body, or exists in provider account
         const targetEmail = cleanEmail || env_1.env.OTP_TARGET_EMAIL;
         if (targetEmail) {
-            mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => { });
+            try {
+                await mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User');
+            }
+            catch (mailErr) {
+                // Log error but do not block response
+            }
         }
         if (role === 'provider') {
             return respond_1.respond.ok(req, res, {
@@ -241,7 +246,12 @@ exports.authController = {
         }
         const targetEmail = cleanEmail || env_1.env.OTP_TARGET_EMAIL;
         if (targetEmail) {
-            mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User').catch(() => { });
+            try {
+                await mail_1.mailService.sendOtpEmail(targetEmail, otp, role === 'provider' ? 'Provider' : 'User');
+            }
+            catch (mailErr) {
+                // Log error but do not block response
+            }
         }
         if (role === 'provider') {
             return respond_1.respond.ok(req, res, {
