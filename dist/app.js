@@ -19,10 +19,8 @@ const notFound_1 = require("@/common/middleware/notFound");
 const index_1 = __importDefault(require("@/routes/index"));
 const app = (0, express_1.default)();
 exports.app = app;
-// Trust proxy
-if (env_1.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1);
-}
+// Trust proxy for reverse proxy environments (Render, Cloudflare, AWS, Heroku)
+app.set('trust proxy', 1);
 // Disable x-powered-by header
 app.disable('x-powered-by');
 // Security headers

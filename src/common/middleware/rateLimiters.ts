@@ -7,6 +7,15 @@ export const globalLimiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false, default: false },
+  keyGenerator: (req) => {
+    return (
+      (req.headers['cf-connecting-ip'] as string) ||
+      (req.headers['x-real-ip'] as string) ||
+      req.ip ||
+      '127.0.0.1'
+    );
+  },
   handler: () => {
     throw new AppError(429, ERROR_CODES.RATE_LIMITED, 'Too many requests, please try again later');
   },
@@ -17,6 +26,15 @@ export const sendOtpIpLimiter = rateLimit({
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false, default: false },
+  keyGenerator: (req) => {
+    return (
+      (req.headers['cf-connecting-ip'] as string) ||
+      (req.headers['x-real-ip'] as string) ||
+      req.ip ||
+      '127.0.0.1'
+    );
+  },
   handler: () => {
     throw new AppError(429, ERROR_CODES.RATE_LIMITED, 'Too many OTP requests from this IP, please try again after an hour');
   },
@@ -27,6 +45,15 @@ export const adminLoginLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false, default: false },
+  keyGenerator: (req) => {
+    return (
+      (req.headers['cf-connecting-ip'] as string) ||
+      (req.headers['x-real-ip'] as string) ||
+      req.ip ||
+      '127.0.0.1'
+    );
+  },
   handler: () => {
     throw new AppError(429, ERROR_CODES.RATE_LIMITED, 'Too many admin login attempts, please try again later');
   },

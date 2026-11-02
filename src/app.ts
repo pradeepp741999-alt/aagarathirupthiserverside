@@ -14,10 +14,8 @@ import apiRouter from '@/routes/index';
 
 const app: Express = express();
 
-// Trust proxy
-if (env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
-}
+// Trust proxy for reverse proxy environments (Render, Cloudflare, AWS, Heroku)
+app.set('trust proxy', 1);
 
 // Disable x-powered-by header
 app.disable('x-powered-by');
