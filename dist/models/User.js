@@ -42,6 +42,7 @@ const userSchema = new mongoose_1.Schema({
         unique: true,
         match: /^[6-9]\d{9}$/,
     },
+    email: { type: String, lowercase: true, trim: true, default: null },
     name: { type: String, default: null },
     whatsapp: { type: String, default: null },
     altMobile: { type: String, default: null },

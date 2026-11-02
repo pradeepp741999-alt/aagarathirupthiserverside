@@ -39,8 +39,12 @@ const constants_1 = require("@/config/constants");
 const otpSessionSchema = new mongoose_1.Schema({
     mobile: {
         type: String,
-        required: true,
         match: /^[6-9]\d{9}$/,
+    },
+    email: {
+        type: String,
+        lowercase: true,
+        trim: true,
     },
     role: {
         type: String,
